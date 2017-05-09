@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     Pusher pusher;
     EditText textEditor;
+    TextWatcher textEditorWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
                 .setAuthorizer(new HttpAuthorizer(AUTH_ENDPOINT)));
 
         PrivateChannelEventListener subscriptionEventListener = new PrivateChannelEventListener() {
+
+
             @Override
             public void onAuthenticationFailure(String message, Exception e) {
                 Log.d(DEBUG_TAG, "Authentication failed.");
@@ -56,7 +59,9 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         Log.d(DEBUG_TAG, data);
                         EditorUpdate editorUpdate = new Gson().fromJson(data, EditorUpdate.class);
+                        textEditor.removeTextChangedListener(textEditorWatcher);
                         textEditor.setText(editorUpdate.data);
+                        textEditor.addTextChangedListener(textEditorWatcher);
                     }
                 });
             }
@@ -65,9 +70,10 @@ public class MainActivity extends AppCompatActivity {
         final PrivateChannel noteChannel = pusher.subscribePrivate("private-editor", subscriptionEventListener);
         noteChannel.bind("client-update", subscriptionEventListener);
 
-        textEditor.addTextChangedListener(new TextWatcher() {
+        textEditorWatcher = new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence charSequence, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence charSequence, int start, int before, int count) {
@@ -78,7 +84,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable editable) {}
-        });
+        };
+        textEditor.addTextChangedListener(textEditorWatcher);
 
     }
 

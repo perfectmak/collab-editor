@@ -21,9 +21,9 @@ public class MainActivity extends AppCompatActivity {
     private static final String PUSHER_CLUSTER = "YOUR PUSHER APP CLUSTER";
     private static final String AUTH_ENDPOINT = "AUTHENTICATION ENDPOINT";
 
-    Pusher pusher;
-    EditText textEditor;
-    TextWatcher textEditorWatcher;
+    private Pusher pusher;
+    private EditText textEditor;
+    private TextWatcher textEditorWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
